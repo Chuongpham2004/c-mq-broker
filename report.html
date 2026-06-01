@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-MQ Broker - System Programming Final Project Report</title>
+    <style>
+        /* ==================== PRINT-READY ACADEMIC REPORT ==================== */
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+        :root {
+            --primary: #1a365d;
+            --accent: #2b6cb0;
+            --text: #1a202c;
+            --text-light: #4a5568;
+            --border: #cbd5e0;
+            --bg-code: #f7fafc;
+            --bg-table-header: #ebf4ff;
+        }
+
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm 2.5cm 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+            font-size: 11.5pt;
+            line-height: 1.15;
+            color: var(--text);
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 2cm;
+            background: #fff;
+        }
+
+        /* ---- COVER PAGE ---- */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            text-align: center;
+            page-break-after: always;
+        }
+        .cover-page .university {
+            font-size: 13pt;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .cover-page .course {
+            font-size: 11pt;
+            color: var(--text-light);
+            margin-bottom: 60px;
+        }
+        .cover-page .title {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 26pt;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+        .cover-page .subtitle {
+            font-size: 14pt;
+            color: var(--accent);
+            margin-bottom: 50px;
+        }
+        .cover-page .meta-table {
+            font-size: 11pt;
+            margin-top: 30px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .cover-page .meta-table td {
+            padding: 5px 15px;
+        }
+        .cover-page .meta-table td:first-child {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .cover-page .date-line {
+            margin-top: 60px;
+            font-size: 11pt;
+            color: var(--text-light);
+        }
+
+        /* ---- HEADINGS ---- */
+        h1 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 18pt;
+            color: var(--primary);
+            margin: 30pt 0 12pt 0;
+            padding-bottom: 6px;
+            border-bottom: 2.5px solid var(--primary);
+            page-break-after: avoid;
+        }
+        h2 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 14pt;
+            color: var(--primary);
+            margin: 22pt 0 8pt 0;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 12pt;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 16pt 0 6pt 0;
+            page-break-after: avoid;
+        }
+
+        /* ---- PARAGRAPHS ---- */
+        p {
+            margin: 6pt 0;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* ---- TABLES ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10pt 0;
+            font-size: 10.5pt;
+            page-break-inside: avoid;
+        }
+        th, td {
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: var(--bg-table-header);
+            font-weight: 700;
+            color: var(--primary);
+        }
+        caption {
+            font-weight: 600;
+            font-size: 10pt;
+            color: var(--text-light);
+            margin-bottom: 4px;
+            text-align: left;
+            font-style: italic;
+        }
+
+        /* ---- CODE ---- */
+        pre {
+            background: var(--bg-code);
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--accent);
+            padding: 10px 14px;
+            margin: 8pt 0;
+            font-family: 'Source Code Pro', 'Consolas', monospace;
+            font-size: 9pt;
+            line-height: 1.4;
+            overflow-x: auto;
+            page-break-inside: avoid;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        code {
+            font-family: 'Source Code Pro', 'Consolas', monospace;
+            font-size: 9.5pt;
+            background: #edf2f7;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        /* ---- LISTS ---- */
+        ul, ol {
+            margin: 6pt 0 6pt 24pt;
+        }
+        li {
+            margin: 3pt 0;
+        }
+
+        /* ---- DIAGRAMS ---- */
+        .diagram-container {
+            margin: 12pt 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        .diagram-container svg {
+            max-width: 100%;
+        }
+        .diagram-caption {
+            font-size: 10pt;
+            font-style: italic;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+
+        /* ---- TABLE OF CONTENTS ---- */
+        .toc {
+            page-break-after: always;
+        }
+        .toc h1 {
+            text-align: center;
+            border-bottom: none;
+        }
+        .toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .toc > ul > li {
+            margin: 8pt 0;
+            font-weight: 700;
+            font-size: 11.5pt;
+        }
+        .toc > ul > li > ul > li {
+            font-weight: 400;
+            font-size: 11pt;
+            margin: 3pt 0 3pt 20pt;
+            color: var(--text-light);
+        }
+        .toc > ul > li > ul > li > ul > li {
+            font-size: 10.5pt;
+            margin: 2pt 0 2pt 20pt;
+        }
+        .toc a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ---- PAGE BREAKS ---- */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* ---- FIGURE ---- */
+        .figure {
+            margin: 14pt 0;
+            page-break-inside: avoid;
+        }
+        .figure-caption {
+            font-size: 10pt;
+            font-style: italic;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        /* ---- FOOTER (print) ---- */
+        @media print {
+            body { padding: 0; }
+            .cover-page { min-height: 100vh; }
+        }
+
+        /* highlight box */
+        .highlight-box {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 10pt 0;
+            font-size: 10.5pt;
+        }
+        .highlight-box strong {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================= COVER PAGE ============================= -->
+<div class="cover-page">
+    <div class="university">Vietnam National University – Information Security</div>
+    <div class="course">System Programming – Final Project</div>
+    <div class="title">C-MQ Broker</div>
+    <div class="subtitle">A Topic-Based Publish-Subscribe Message Broker in C</div>
+    <table class="meta-table">
+        <tr><td>Project Code:</td><td>D4 – Message Broker</td></tr>
+        <tr><td>Language:</td><td>C11 / POSIX / Linux x86-64</td></tr>
+        <tr><td>Lines of Code:</td><td>~2,100 (16 source files)</td></tr>
+    </table>
+    <table class="meta-table" style="margin-top:30px;">
+        <tr><td>Member 1:</td><td>Nguyễn Văn A – 22001234 – a.nguyen@vnu.edu.vn</td></tr>
+        <tr><td>Member 2:</td><td>Trần Thị B – 22001235 – b.tran@vnu.edu.vn</td></tr>
+        <tr><td>Member 3:</td><td>Lê Văn C – 22001236 – c.le@vnu.edu.vn</td></tr>
+    </table>
+    <div class="date-line">June 2026</div>
+</div>
+
+<!-- ============================= TABLE OF CONTENTS ============================= -->
+<div class="toc">
+    <h1>Table of Contents</h1>
+    <ul>
+        <li><a href="#sec1">1. Introduction</a>
+            <ul>
+                <li><a href="#sec1-1">1.1 Problem Statement</a></li>
+                <li><a href="#sec1-2">1.2 Objectives</a></li>
+                <li><a href="#sec1-3">1.3 Approach Overview</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec2">2. Background &amp; Theory</a>
+            <ul>
+                <li><a href="#sec2-1">2.1 Publish-Subscribe Messaging Model</a></li>
+                <li><a href="#sec2-2">2.2 Memory-Mapped I/O (mmap)</a></li>
+                <li><a href="#sec2-3">2.3 POSIX Threads and Synchronization</a></li>
+                <li><a href="#sec2-4">2.4 Signal Handling in Multi-Threaded Programs</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec3">3. System Design</a>
+            <ul>
+                <li><a href="#sec3-1">3.1 High-Level Architecture</a></li>
+                <li><a href="#sec3-2">3.2 Component Breakdown</a></li>
+                <li><a href="#sec3-3">3.3 Binary Protocol Design</a></li>
+                <li><a href="#sec3-4">3.4 Key Data Structures</a></li>
+                <li><a href="#sec3-5">3.5 Message Flow Diagram</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec4">4. Implementation</a>
+            <ul>
+                <li><a href="#sec4-1">4.1 Persistent Append-Only Storage</a></li>
+                <li><a href="#sec4-2">4.2 Configurable Fsync Policies</a></li>
+                <li><a href="#sec4-3">4.3 Topic Wildcard Matching</a></li>
+                <li><a href="#sec4-4">4.4 Fan-Out with Deduplication</a></li>
+                <li><a href="#sec4-5">4.5 Per-Subscriber Cursors &amp; Replay</a></li>
+                <li><a href="#sec4-6">4.6 Pending-ACK &amp; Redelivery</a></li>
+                <li><a href="#sec4-7">4.7 Retention Policies</a></li>
+                <li><a href="#sec4-8">4.8 Thread Pool (Boss-Worker)</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec5">5. Testing &amp; Validation</a>
+            <ul>
+                <li><a href="#sec5-1">5.1 Test Methodology</a></li>
+                <li><a href="#sec5-2">5.2 Test Cases and Results</a></li>
+                <li><a href="#sec5-3">5.3 Durability Test (kill -9)</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec6">6. Performance Analysis</a>
+            <ul>
+                <li><a href="#sec6-1">6.1 Fsync Policy Benchmarks</a></li>
+                <li><a href="#sec6-2">6.2 Bottleneck Analysis</a></li>
+                <li><a href="#sec6-3">6.3 Optimizations Applied</a></li>
+            </ul>
+        </li>
+        <li><a href="#sec7">7. Conclusion &amp; Future Work</a></li>
+        <li><a href="#sec8">8. References</a></li>
+    </ul>
+</div>
+
+<!-- ============================= 1. INTRODUCTION ============================= -->
+<h1 id="sec1">1. Introduction</h1>
+
+<h2 id="sec1-1">1.1 Problem Statement</h2>
+<p>
+Modern distributed systems rely heavily on asynchronous message passing to decouple services, buffer workloads, and enable event-driven architectures. Production message brokers such as Apache Kafka, RabbitMQ, and MQTT-based systems manage millions of messages per second, yet their internal mechanics—memory-mapped persistence, acknowledge-based delivery guarantees, and topic hierarchy routing—are rarely explored at the systems-programming level.
+</p>
+<p>
+This project addresses the challenge of building a <strong>fully functional, topic-based Publish-Subscribe message broker from scratch in C</strong>, relying exclusively on the C11 standard library and POSIX system calls. The goal is to demonstrate mastery of core systems programming concepts: TCP socket programming, multi-threaded concurrency with mutexes, memory-mapped file I/O, signal handling, and durable persistence under crash scenarios.
+</p>
+
+<h2 id="sec1-2">1.2 Objectives</h2>
+<p>The project implements the following eight features:</p>
+<ol>
+    <li><strong>Topic-based pub-sub</strong> with PUBLISH, SUBSCRIBE, UNSUBSCRIBE, and ACK commands.</li>
+    <li><strong>Persistent append-only log</strong> per topic that survives broker restarts.</li>
+    <li><strong>Configurable fsync policy</strong>: per-write, group-commit, or time-based.</li>
+    <li><strong>Per-subscriber cursors</strong> (persisted to disk) for resume-on-reconnect.</li>
+    <li><strong>Pending-ACK list</strong> with automatic redelivery on disconnect or timeout.</li>
+    <li><strong>Topic hierarchy matching</strong>: <code>+</code> (single level) and <code>#</code> (multi-level) wildcards.</li>
+    <li><strong>Retention policies</strong>: time-based, size-based, and all-acknowledged.</li>
+    <li><strong>Durability test</strong>: kill -9 the broker mid-publish, restart, and verify zero data loss.</li>
+</ol>
+
+<h2 id="sec1-3">1.3 Approach Overview</h2>
+<p>
+We designed a layered architecture separating concerns into five modules: networking (TCP I/O and protocol parsing), thread pool (Boss-Worker concurrency), broker core (pub-sub logic, wildcards, sessions, ACK management), storage engine (mmap-based append-only writes with configurable fsync), and background workers (redelivery and retention). All inter-thread communication is synchronized using POSIX mutexes with a strict lock-ordering discipline to prevent deadlocks. The system compiles cleanly with <code>gcc -Wall -Wextra -std=c11</code> producing zero warnings, and all five automated test cases pass consistently.
+</p>
+
+<!-- ============================= 2. BACKGROUND ============================= -->
+<h1 id="sec2" class="page-break">2. Background &amp; Theory</h1>
+
+<h2 id="sec2-1">2.1 Publish-Subscribe Messaging Model</h2>
+<p>
+The Publish-Subscribe (Pub-Sub) pattern decouples message producers from consumers through an intermediary called a <em>broker</em>. Producers publish messages to named channels called <em>topics</em>, and consumers subscribe to topics of interest. The broker is responsible for <em>fan-out</em>: routing each published message to all subscribers whose subscription pattern matches the message's topic. This model enables one-to-many communication without producers needing awareness of consumer identities or counts [1].
+</p>
+<p>
+Topic-based systems often support <strong>hierarchical topic names</strong> using a delimiter (typically <code>/</code>), allowing wildcard subscriptions. The MQTT specification [2] defines two wildcard characters: <code>+</code> matches exactly one level (e.g., <code>sensor/+/temp</code> matches <code>sensor/room1/temp</code> but not <code>sensor/room1/room2/temp</code>), and <code>#</code> matches zero or more levels (e.g., <code>sensor/#</code> matches <code>sensor</code>, <code>sensor/temp</code>, and <code>sensor/a/b/c</code>).
+</p>
+
+<h2 id="sec2-2">2.2 Memory-Mapped I/O (mmap)</h2>
+<p>
+The <code>mmap()</code> system call maps a file's contents directly into the process's virtual address space, enabling file I/O through simple pointer arithmetic and <code>memcpy()</code> instead of explicit <code>read()</code>/<code>write()</code> system calls [3]. With <code>MAP_SHARED</code>, modifications to the mapped region are automatically reflected in the underlying file. The <code>msync()</code> call can be used to explicitly flush dirty pages to disk: <code>MS_SYNC</code> blocks until the write is confirmed on the storage device, while <code>MS_ASYNC</code> initiates a non-blocking writeback. This mechanism gives developers fine-grained control over the durability vs. performance trade-off.
+</p>
+
+<h2 id="sec2-3">2.3 POSIX Threads and Synchronization</h2>
+<p>
+POSIX Threads (<code>pthreads</code>) provide the standard API for multi-threaded programming on Linux [4]. Our system uses multiple mutex types to protect shared state: a global lock for the topic registry, per-topic locks for subscriber lists, and dedicated locks for the pending-ACK queue, cursor records, and message ID counter. A consistent lock-ordering policy prevents deadlock: the global lock is always acquired before topic locks, which are acquired before the pending-ACK lock and storage mutex.
+</p>
+
+<h2 id="sec2-4">2.4 Signal Handling in Multi-Threaded Programs</h2>
+<p>
+In multi-threaded programs, signals are delivered to an arbitrary thread unless explicitly directed. We use <code>sigaction()</code> with <code>SA_RESTART</code> intentionally <strong>disabled</strong> so that blocking calls such as <code>accept()</code> return immediately with <code>errno = EINTR</code> when SIGINT or SIGTERM is received. The signal handler sets a <code>volatile sig_atomic_t</code> flag that the main accept loop checks on each iteration, enabling a clean and deterministic shutdown sequence [5].
+</p>
+
+
+<!-- ============================= 3. SYSTEM DESIGN ============================= -->
+<h1 id="sec3" class="page-break">3. System Design</h1>
+
+<h2 id="sec3-1">3.1 High-Level Architecture</h2>
+
+<div class="diagram-container">
+<svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" font-family="'Open Sans', sans-serif" font-size="11">
+  <!-- Background -->
+  <rect x="0" y="0" width="800" height="520" fill="#fff"/>
+
+  <!-- Clients Box -->
+  <rect x="20" y="20" width="150" height="180" rx="8" fill="#ebf8ff" stroke="#90cdf4" stroke-width="1.5"/>
+  <text x="95" y="42" text-anchor="middle" font-weight="700" fill="#2b6cb0" font-size="12">Clients</text>
+  <rect x="35" y="55" width="120" height="28" rx="5" fill="#bee3f8" stroke="#63b3ed"/>
+  <text x="95" y="74" text-anchor="middle" fill="#2a4365" font-size="10">Producer 1</text>
+  <rect x="35" y="90" width="120" height="28" rx="5" fill="#bee3f8" stroke="#63b3ed"/>
+  <text x="95" y="109" text-anchor="middle" fill="#2a4365" font-size="10">Producer 2</text>
+  <rect x="35" y="125" width="120" height="28" rx="5" fill="#c6f6d5" stroke="#68d391"/>
+  <text x="95" y="144" text-anchor="middle" fill="#22543d" font-size="10">Consumer A</text>
+  <rect x="35" y="160" width="120" height="28" rx="5" fill="#c6f6d5" stroke="#68d391"/>
+  <text x="95" y="179" text-anchor="middle" fill="#22543d" font-size="10">Consumer B</text>
+
+  <!-- Arrows from Clients to Server -->
+  <line x1="170" y1="110" x2="220" y2="110" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4a5568"/></marker></defs>
+
+  <!-- Broker Process Box -->
+  <rect x="220" y="10" width="380" height="500" rx="10" fill="#fffff0" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="410" y="34" text-anchor="middle" font-weight="700" fill="#1a365d" font-size="13">Broker Process</text>
+
+  <!-- Server Layer -->
+  <rect x="240" y="50" width="340" height="55" rx="6" fill="#fefcbf" stroke="#ecc94b" stroke-width="1.2"/>
+  <text x="410" y="68" text-anchor="middle" font-weight="600" fill="#744210" font-size="11">server.c — Entry Point</text>
+  <text x="410" y="86" text-anchor="middle" fill="#975a16" font-size="9.5">Accept Loop (TCP :8080) · CLI Parsing · Signal Handler</text>
+
+  <!-- Thread Pool -->
+  <rect x="240" y="115" width="340" height="40" rx="6" fill="#fefcbf" stroke="#ecc94b" stroke-width="1.2"/>
+  <text x="410" y="133" text-anchor="middle" font-weight="600" fill="#744210" font-size="11">threadpool.c — Boss-Worker Pattern (4 threads, queue=100)</text>
+
+  <!-- Broker Core -->
+  <rect x="240" y="165" width="340" height="160" rx="6" fill="#ebf4ff" stroke="#63b3ed" stroke-width="1.5"/>
+  <text x="410" y="185" text-anchor="middle" font-weight="700" fill="#2a4365" font-size="11">broker.c — Core Logic (869 lines)</text>
+
+  <rect x="255" y="195" width="100" height="30" rx="4" fill="#bee3f8" stroke="#4299e1"/>
+  <text x="305" y="215" text-anchor="middle" fill="#2a4365" font-size="9">Topic Registry</text>
+
+  <rect x="365" y="195" width="100" height="30" rx="4" fill="#bee3f8" stroke="#4299e1"/>
+  <text x="415" y="215" text-anchor="middle" fill="#2a4365" font-size="9">Wildcard Matcher</text>
+
+  <rect x="475" y="195" width="90" height="30" rx="4" fill="#bee3f8" stroke="#4299e1"/>
+  <text x="520" y="215" text-anchor="middle" fill="#2a4365" font-size="9">Session Mgr</text>
+
+  <rect x="255" y="235" width="100" height="30" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="305" y="255" text-anchor="middle" fill="#22543d" font-size="9">Cursor Manager</text>
+
+  <rect x="365" y="235" width="100" height="30" rx="4" fill="#fed7d7" stroke="#fc8181"/>
+  <text x="415" y="255" text-anchor="middle" fill="#742a2a" font-size="9">Pending ACK</text>
+
+  <rect x="475" y="235" width="90" height="30" rx="4" fill="#fefcbf" stroke="#ecc94b"/>
+  <text x="520" y="255" text-anchor="middle" fill="#744210" font-size="9">Msg Dispatcher</text>
+
+  <rect x="255" y="275" width="150" height="30" rx="4" fill="#e9d8fd" stroke="#9f7aea"/>
+  <text x="330" y="295" text-anchor="middle" fill="#44337a" font-size="9">Redelivery Worker (1s)</text>
+
+  <rect x="415" y="275" width="150" height="30" rx="4" fill="#e9d8fd" stroke="#9f7aea"/>
+  <text x="490" y="295" text-anchor="middle" fill="#44337a" font-size="9">Retention Worker (5s)</text>
+
+  <!-- Storage Engine -->
+  <rect x="240" y="340" width="340" height="70" rx="6" fill="#f0fff4" stroke="#68d391" stroke-width="1.5"/>
+  <text x="410" y="360" text-anchor="middle" font-weight="700" fill="#22543d" font-size="11">storage.c — Persistence Engine (183 lines)</text>
+
+  <rect x="255" y="370" width="95" height="28" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="302" y="389" text-anchor="middle" fill="#22543d" font-size="9">mmap Writer</text>
+
+  <rect x="360" y="370" width="100" height="28" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="410" y="389" text-anchor="middle" fill="#22543d" font-size="9">Fsync Controller</text>
+
+  <rect x="470" y="370" width="95" height="28" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="517" y="389" text-anchor="middle" fill="#22543d" font-size="9">Log Trimmer</text>
+
+  <!-- Network Layer -->
+  <rect x="240" y="420" width="340" height="40" rx="6" fill="#fff5f5" stroke="#fc8181" stroke-width="1.2"/>
+  <text x="410" y="445" text-anchor="middle" font-weight="600" fill="#742a2a" font-size="11">network.c — TCP Socket I/O · Binary Protocol Parser</text>
+
+  <!-- POSIX -->
+  <rect x="240" y="470" width="340" height="30" rx="6" fill="#e2e8f0" stroke="#a0aec0"/>
+  <text x="410" y="490" text-anchor="middle" font-weight="600" fill="#4a5568" font-size="10">POSIX / Linux Kernel / C Standard Library</text>
+
+  <!-- Disk -->
+  <rect x="640" y="200" width="140" height="170" rx="8" fill="#f7fafc" stroke="#a0aec0" stroke-width="1.5"/>
+  <text x="710" y="222" text-anchor="middle" font-weight="700" fill="#4a5568" font-size="11">Disk (data/)</text>
+  <rect x="655" y="235" width="110" height="24" rx="4" fill="#e2e8f0" stroke="#a0aec0"/>
+  <text x="710" y="252" text-anchor="middle" fill="#4a5568" font-size="9">sensor_temp.log</text>
+  <rect x="655" y="265" width="110" height="24" rx="4" fill="#e2e8f0" stroke="#a0aec0"/>
+  <text x="710" y="282" text-anchor="middle" fill="#4a5568" font-size="9">home_light.log</text>
+  <rect x="655" y="295" width="110" height="24" rx="4" fill="#e2e8f0" stroke="#a0aec0"/>
+  <text x="710" y="312" text-anchor="middle" fill="#4a5568" font-size="9">cursors.txt</text>
+  <rect x="655" y="330" width="110" height="24" rx="4" fill="#e2e8f0" stroke="#a0aec0"/>
+  <text x="710" y="347" text-anchor="middle" fill="#4a5568" font-size="9">*.log (per topic)</text>
+
+  <!-- Arrow: Storage to Disk -->
+  <line x1="580" y1="370" x2="640" y2="300" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="615" y="328" fill="#4a5568" font-size="8" transform="rotate(-25 615 328)">mmap / msync</text>
+</svg>
+<div class="diagram-caption">Figure 1: High-level system architecture showing five modules and their relationships.</div>
+</div>
+
+<h2 id="sec3-2">3.2 Component Breakdown</h2>
+
+<table>
+<caption>Table 1: Module breakdown of the C-MQ Broker</caption>
+<tr><th>Module</th><th>File(s)</th><th>Lines</th><th>Responsibility</th></tr>
+<tr><td><strong>Server</strong></td><td>server.c</td><td>145</td><td>Entry point, CLI argument parsing, signal handling, accept loop</td></tr>
+<tr><td><strong>Thread Pool</strong></td><td>threadpool.c/.h</td><td>107</td><td>Boss-Worker pattern: 4 worker threads, circular task queue (size 100)</td></tr>
+<tr><td><strong>Broker Core</strong></td><td>broker.c/.h</td><td>911</td><td>Pub-Sub routing, wildcards, sessions, cursors, ACK management, redelivery, retention</td></tr>
+<tr><td><strong>Storage Engine</strong></td><td>storage.c/.h</td><td>208</td><td>mmap-based append-only writes, fsync policy, log trimming</td></tr>
+<tr><td><strong>Network</strong></td><td>network.c/.h</td><td>123</td><td>TCP socket creation, exact-read, binary protocol serialization/deserialization</td></tr>
+<tr><td><strong>Clients</strong></td><td>producer.c, consumer.c, noack_client.c</td><td>234</td><td>Producer (fire-and-forget), Consumer (auto-ACK), NoACK client (test redelivery)</td></tr>
+</table>
+
+<h2 id="sec3-3">3.3 Binary Protocol Design</h2>
+<p>
+All client-broker communication uses a compact binary protocol. Every message consists of a fixed 14-byte header followed by variable-length topic and payload fields:
+</p>
+
+<table>
+<caption>Table 2: MessageHeader layout (14 bytes, packed, no padding)</caption>
+<tr><th>Field</th><th>Type</th><th>Size</th><th>Description</th></tr>
+<tr><td><code>type</code></td><td>uint8_t</td><td>1 B</td><td>Message type: CONNECT(1), PUBLISH(2), SUBSCRIBE(3), ACK(4), UNSUBSCRIBE(5)</td></tr>
+<tr><td><code>topic_len</code></td><td>uint8_t</td><td>1 B</td><td>Length of topic string (max 255 bytes)</td></tr>
+<tr><td><code>msg_id</code></td><td>uint32_t</td><td>4 B</td><td>Unique message identifier (network byte order)</td></tr>
+<tr><td><code>timestamp</code></td><td>uint32_t</td><td>4 B</td><td>Unix epoch timestamp (network byte order)</td></tr>
+<tr><td><code>payload_len</code></td><td>uint32_t</td><td>4 B</td><td>Payload length in bytes (network byte order)</td></tr>
+</table>
+
+<p>The <code>__attribute__((packed))</code> directive ensures the compiler inserts no padding, guaranteeing exactly 14 bytes on all platforms. Multi-byte fields are transmitted in network byte order (big-endian) using <code>htonl()</code>/<code>ntohl()</code>.</p>
+
+<pre>
+typedef struct __attribute__((packed)) {
+    uint8_t  type;
+    uint8_t  topic_len;
+    uint32_t msg_id;
+    uint32_t timestamp;
+    uint32_t payload_len;
+} MessageHeader;  // Total: 14 bytes
+</pre>
+
+<h2 id="sec3-4">3.4 Key Data Structures</h2>
+
+<table>
+<caption>Table 3: Core data structures</caption>
+<tr><th>Structure</th><th>Purpose</th><th>Key Fields</th></tr>
+<tr><td><code>Topic</code></td><td>Represents one topic channel</td><td><code>name[256]</code>, <code>subscriber_sockets[32]</code>, <code>sub_count</code>, <code>topic_lock</code></td></tr>
+<tr><td><code>Broker</code></td><td>Global broker state</td><td><code>topics[64]</code>, <code>topic_count</code>, <code>global_lock</code></td></tr>
+<tr><td><code>CursorRecord</code></td><td>Per-client read position</td><td><code>client_id[64]</code>, <code>topic[256]</code>, <code>offset</code> (byte position in log)</td></tr>
+<tr><td><code>ActiveSession</code></td><td>Socket-to-client mapping</td><td><code>socket</code>, <code>client_id[64]</code></td></tr>
+<tr><td><code>PendingAck</code></td><td>Unacknowledged message tracking</td><td><code>msg_id</code>, <code>client_socket</code>, <code>topic</code>, <code>file_offset</code>, <code>payload</code>, <code>sent_time</code>, <code>retry_count</code>, <code>*next</code></td></tr>
+</table>
+
+
+<h2 id="sec3-5">3.5 Message Flow Diagram</h2>
+
+<div class="diagram-container">
+<svg viewBox="0 0 780 430" xmlns="http://www.w3.org/2000/svg" font-family="'Open Sans', sans-serif" font-size="10">
+  <!-- Lifelines -->
+  <text x="80" y="20" text-anchor="middle" font-weight="700" fill="#2b6cb0" font-size="11">Producer</text>
+  <rect x="55" y="25" width="50" height="22" rx="4" fill="#bee3f8" stroke="#4299e1"/>
+  <text x="80" y="40" text-anchor="middle" font-size="9" fill="#2a4365">client</text>
+  <line x1="80" y1="47" x2="80" y2="420" stroke="#a0aec0" stroke-dasharray="4,3"/>
+
+  <text x="280" y="20" text-anchor="middle" font-weight="700" fill="#2b6cb0" font-size="11">Broker</text>
+  <rect x="250" y="25" width="60" height="22" rx="4" fill="#ebf4ff" stroke="#4299e1"/>
+  <text x="280" y="40" text-anchor="middle" font-size="9" fill="#2a4365">worker</text>
+  <line x1="280" y1="47" x2="280" y2="420" stroke="#a0aec0" stroke-dasharray="4,3"/>
+
+  <text x="480" y="20" text-anchor="middle" font-weight="700" fill="#22543d" font-size="11">Storage</text>
+  <rect x="450" y="25" width="60" height="22" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="480" y="40" text-anchor="middle" font-size="9" fill="#22543d">engine</text>
+  <line x1="480" y1="47" x2="480" y2="420" stroke="#a0aec0" stroke-dasharray="4,3"/>
+
+  <text x="680" y="20" text-anchor="middle" font-weight="700" fill="#744210" font-size="11">Consumer</text>
+  <rect x="650" y="25" width="60" height="22" rx="4" fill="#c6f6d5" stroke="#68d391"/>
+  <text x="680" y="40" text-anchor="middle" font-size="9" fill="#22543d">client</text>
+  <line x1="680" y1="47" x2="680" y2="420" stroke="#a0aec0" stroke-dasharray="4,3"/>
+
+  <!-- Step 1: PUBLISH -->
+  <line x1="80" y1="75" x2="280" y2="75" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="180" y="68" text-anchor="middle" fill="#2b6cb0" font-size="9.5" font-weight="600">PUBLISH (Header+Topic+Payload)</text>
+
+  <!-- Step 2: Save to disk -->
+  <line x1="280" y1="105" x2="480" y2="105" stroke="#38a169" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="380" y="98" text-anchor="middle" fill="#38a169" font-size="9.5">storage_save_message()</text>
+
+  <!-- Step 3: mmap + msync -->
+  <rect x="435" y="115" width="90" height="35" rx="4" fill="#f0fff4" stroke="#68d391"/>
+  <text x="480" y="130" text-anchor="middle" font-size="8.5" fill="#22543d">ftruncate()</text>
+  <text x="480" y="142" text-anchor="middle" font-size="8.5" fill="#22543d">mmap() + msync()</text>
+
+  <!-- Step 4: return offset -->
+  <line x1="480" y1="155" x2="280" y2="155" stroke="#38a169" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
+  <text x="380" y="168" text-anchor="middle" fill="#38a169" font-size="9">return end_offset</text>
+
+  <!-- Step 5: match_topic -->
+  <rect x="235" y="178" width="90" height="25" rx="4" fill="#ebf4ff" stroke="#4299e1"/>
+  <text x="280" y="195" text-anchor="middle" font-size="8.5" fill="#2a4365">match_topic()</text>
+
+  <!-- Step 6: Create PendingAck -->
+  <rect x="235" y="210" width="90" height="25" rx="4" fill="#fff5f5" stroke="#fc8181"/>
+  <text x="280" y="227" text-anchor="middle" font-size="8.5" fill="#742a2a">PendingAck++</text>
+
+  <!-- Step 7: Forward to consumer -->
+  <line x1="280" y1="250" x2="680" y2="250" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="480" y="243" text-anchor="middle" fill="#2b6cb0" font-size="9.5" font-weight="600">send(Header+Topic+Payload)</text>
+
+  <!-- Step 8: ACK -->
+  <line x1="680" y1="290" x2="280" y2="290" stroke="#d69e2e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="480" y="283" text-anchor="middle" fill="#d69e2e" font-size="9.5" font-weight="600">ACK (msg_id)</text>
+
+  <!-- Step 9: Update cursor -->
+  <rect x="235" y="305" width="90" height="25" rx="4" fill="#c6f6d5" stroke="#48bb78"/>
+  <text x="280" y="322" text-anchor="middle" font-size="8.5" fill="#22543d">set_cursor()</text>
+
+  <!-- Step 10: Remove PendingAck -->
+  <rect x="235" y="338" width="90" height="25" rx="4" fill="#f0fff4" stroke="#68d391"/>
+  <text x="280" y="355" text-anchor="middle" font-size="8.5" fill="#22543d">free(PendingAck)</text>
+
+  <!-- Alt box: timeout -->
+  <rect x="180" y="375" width="540" height="35" rx="4" fill="none" stroke="#e53e3e" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="200" y="390" fill="#e53e3e" font-size="8.5" font-weight="700">ALT: No ACK within 5s</text>
+  <text x="400" y="402" fill="#e53e3e" font-size="8.5">→ redelivery_worker resends (up to 3 retries, then shutdown socket)</text>
+</svg>
+<div class="diagram-caption">Figure 2: Complete message flow from PUBLISH to ACK, including persistence and redelivery.</div>
+</div>
+
+
+<!-- ============================= 4. IMPLEMENTATION ============================= -->
+<h1 id="sec4" class="page-break">4. Implementation</h1>
+
+<h2 id="sec4-1">4.1 Persistent Append-Only Storage</h2>
+<p>
+Each topic maps to a dedicated log file on disk under the <code>./data/</code> directory. The topic name's <code>/</code> delimiters are replaced with <code>_</code> to form a valid filename (e.g., <code>sensor/nhietdo</code> → <code>data/sensor_nhietdo.log</code>). Messages are appended sequentially using a five-step <code>mmap</code>-based process:
+</p>
+
+<pre>
+size_t storage_save_message(const char *topic, Message *msg) {
+    // 1. Open file (O_RDWR | O_CREAT)
+    int fd = open(filepath, O_RDWR | O_CREAT, 0666);
+
+    // 2. Get current file size
+    struct stat st;
+    fstat(fd, &st);
+    size_t old_size = st.st_size;
+    size_t new_size = old_size + record_size;
+
+    // 3. Extend file to accommodate new record
+    ftruncate(fd, new_size);
+
+    // 4. Memory-map the entire file
+    void *map = mmap(NULL, new_size, PROT_READ | PROT_WRITE,
+                     MAP_SHARED, fd, 0);
+
+    // 5. Write header + topic + payload at end
+    memcpy(map + old_size, &header, sizeof(MessageHeader));
+    memcpy(map + old_size + sizeof(header), topic, topic_len);
+    memcpy(map + old_size + sizeof(header) + topic_len,
+           payload, payload_len);
+
+    // 6. Fsync according to configured policy
+    msync(map, new_size, MS_SYNC);  // or MS_ASYNC
+
+    munmap(map, new_size);
+    close(fd);
+    return new_size;  // end offset = next cursor position
+}
+</pre>
+
+<p>
+This design achieves <strong>zero-copy persistence</strong>: the kernel's page cache handles the actual disk write, eliminating an extra copy into a userspace buffer. The on-disk format mirrors the wire format identically (14-byte header + topic + payload), so replay reads can send data directly to clients without re-serialization.
+</p>
+
+<h2 id="sec4-2">4.2 Configurable Fsync Policies</h2>
+<p>The system supports three fsync strategies, selectable at startup via <code>--fsync &lt;policy&gt;</code>:</p>
+
+<table>
+<caption>Table 4: Fsync policy comparison</caption>
+<tr><th>Policy</th><th>Behavior</th><th>Durability</th><th>Throughput</th></tr>
+<tr><td><strong>per-write</strong> (default)</td><td><code>msync(MS_SYNC)</code> on every message</td><td>Highest — zero data loss on crash</td><td>Lowest — disk I/O bottleneck</td></tr>
+<tr><td><strong>group-commit</strong></td><td><code>MS_SYNC</code> every 5 writes, <code>MS_ASYNC</code> otherwise</td><td>Medium — up to 4 messages at risk</td><td>~5× improvement over per-write</td></tr>
+<tr><td><strong>time-based</strong></td><td><code>MS_SYNC</code> if ≥1 second since last sync</td><td>Medium — up to ~1s of data at risk</td><td>Highest under burst workloads</td></tr>
+</table>
+
+<pre>
+// Fsync decision logic in storage_save_message():
+if (global_fsync_policy == FSYNC_PER_WRITE) {
+    do_sync = 1;
+} else if (global_fsync_policy == FSYNC_GROUP_COMMIT) {
+    write_count++;
+    if (write_count >= 5) { do_sync = 1; write_count = 0; }
+} else if (global_fsync_policy == FSYNC_TIME_BASED) {
+    if (time(NULL) - last_sync_time >= 1) {
+        do_sync = 1; last_sync_time = now;
+    }
+}
+msync(map, new_size, do_sync ? MS_SYNC : MS_ASYNC);
+</pre>
+
+<h2 id="sec4-3">4.3 Topic Wildcard Matching</h2>
+<p>
+The <code>match_topic(sub, pub)</code> function performs character-by-character comparison between a subscription pattern and a published topic name, handling two wildcard characters:
+</p>
+
+<pre>
+int match_topic(const char *sub, const char *pub) {
+    const char *s = sub, *p = pub;
+    while (1) {
+        if (*s == '#') return 1;  // # matches everything remaining
+        if (*s == '+') {
+            // Skip exactly one level in the published topic
+            while (*p != '/' && *p != '\0') p++;
+            s++;
+            continue;
+        }
+        if (*s == *p) {
+            if (*s == '\0') return 1;  // exact match
+            s++; p++;
+        } else {
+            // Edge case: "sport/#" matches "sport"
+            if (*s == '/' && *(s+1) == '#' && *(s+2) == '\0'
+                && *p == '\0')
+                return 1;
+            return 0;
+        }
+    }
+}
+</pre>
+
+<table>
+<caption>Table 5: Wildcard matching examples</caption>
+<tr><th>Pattern</th><th>Topic</th><th>Match?</th><th>Reason</th></tr>
+<tr><td><code>sensor/+/temp</code></td><td><code>sensor/room1/temp</code></td><td>✅ Yes</td><td><code>+</code> = <code>room1</code></td></tr>
+<tr><td><code>sensor/+/temp</code></td><td><code>sensor/r1/r2/temp</code></td><td>❌ No</td><td><code>+</code> matches only 1 level</td></tr>
+<tr><td><code>sensor/#</code></td><td><code>sensor</code></td><td>✅ Yes</td><td><code>#</code> matches 0 levels</td></tr>
+<tr><td><code>sensor/#</code></td><td><code>sensor/a/b/c</code></td><td>✅ Yes</td><td><code>#</code> matches all remaining</td></tr>
+<tr><td><code>#</code></td><td><code>any/topic/path</code></td><td>✅ Yes</td><td>Root <code>#</code> matches everything</td></tr>
+</table>
+
+<h2 id="sec4-4">4.4 Fan-Out with Deduplication</h2>
+<p>
+During publish, the broker iterates over <strong>all</strong> registered topics, checking each subscription pattern against the published topic using <code>match_topic()</code>. A deduplication array (<code>sent_sockets[]</code>) prevents a consumer who subscribes to multiple matching patterns from receiving duplicate copies of the same message:
+</p>
+<pre>
+int sent_sockets[MAX_SUBSCRIBERS * MAX_TOPICS];
+int sent_count = 0;
+
+for (int idx = 0; idx < broker.topic_count; idx++) {
+    if (match_topic(broker.topics[idx].name, msg->topic)) {
+        for (int i = 0; i < topic->sub_count; i++) {
+            int sub_sock = topic->subscriber_sockets[i];
+            // Skip if already sent to this socket
+            int already_sent = 0;
+            for (int s = 0; s < sent_count; s++)
+                if (sent_sockets[s] == sub_sock) { already_sent = 1; break; }
+            if (already_sent) continue;
+            sent_sockets[sent_count++] = sub_sock;
+            // ... send message + create PendingAck
+        }
+    }
+}
+</pre>
+
+<h2 id="sec4-5">4.5 Per-Subscriber Cursors &amp; Replay</h2>
+<p>
+Each subscriber's read position is tracked as a <strong>byte offset</strong> into the corresponding topic's log file. The cursor is updated only on successful ACK, and it advances forward-only (a new offset must exceed the current one). Cursors are persisted in <code>data/cursors.txt</code> with format <code>client_id:topic:offset</code> per line, reloaded on broker startup via <code>load_cursors()</code>.
+</p>
+<p>
+When a client subscribes, the function <code>replay_missed_messages()</code> scans all <code>.log</code> files in <code>data/</code>, matches each file's topic against the subscription pattern, and replays all messages from the cursor offset to the end of file:
+</p>
+
+<pre>
+// Simplified replay logic:
+size_t cursor = get_cursor(client_id, orig_topic);
+void *map = mmap(NULL, file_size, PROT_READ, MAP_SHARED, fd, 0);
+size_t offset = cursor;
+while (offset + sizeof(MessageHeader) <= file_size) {
+    MessageHeader *h = (MessageHeader *)((char *)map + offset);
+    size_t record_size = sizeof(MessageHeader) + h->topic_len
+                       + ntohl(h->payload_len);
+    // Send record to client, create PendingAck
+    send(client_socket, &header, sizeof(MessageHeader), 0);
+    send(client_socket, orig_topic, topic_len, 0);
+    send(client_socket, payload, payload_len, 0);
+    offset += record_size;
+}
+</pre>
+
+<h2 id="sec4-6">4.6 Pending-ACK &amp; Redelivery</h2>
+<p>
+Every message sent to a consumer creates a <code>PendingAck</code> node in a singly-linked list protected by <code>pending_ack_lock</code>. The background <code>redelivery_worker</code> thread runs every 1 second and scans this list. If any entry has been unacknowledged for ≥5 seconds, it is retransmitted. After 3 failed retries, the broker forcibly disconnects the client using <code>shutdown(fd, SHUT_RDWR)</code> followed by <code>close(fd)</code>. The <code>shutdown()</code> call is critical: it unblocks any thread currently in <code>read_exact()</code> on that socket, preventing thread hangs.
+</p>
+
+<h2 id="sec4-7">4.7 Retention Policies</h2>
+<p>
+The <code>retention_worker</code> thread runs every 5 seconds and processes each <code>.log</code> file against three configurable policies:
+</p>
+<ol>
+    <li><strong>Time-based</strong> (<code>--retention-time N</code>): Removes messages with <code>timestamp &lt; now - N</code>.</li>
+    <li><strong>Size-based</strong> (<code>--retention-size N</code>): Trims from the front when file size exceeds N bytes.</li>
+    <li><strong>All-ACKed</strong> (<code>--retention-acked</code>): Removes messages acknowledged by <em>all</em> active subscribers (offset ≤ minimum cursor).</li>
+</ol>
+<p>
+When multiple policies are active, the <strong>maximum</strong> trim offset among all three is used, ensuring the most aggressive cleanup. After trimming, cursor offsets and pending-ACK file offsets are adjusted downward by the number of removed bytes to maintain correctness.
+</p>
+<p>The physical trimming is performed by <code>trim_log_file()</code>, which uses <code>mmap</code> + <code>memmove</code> + <code>ftruncate</code> to shift remaining data to the front of the file.</p>
+
+<h2 id="sec4-8">4.8 Thread Pool (Boss-Worker)</h2>
+<p>
+The thread pool implements the Boss-Worker pattern: the main thread (boss) accepts TCP connections and enqueues them into a circular buffer of size 100. Four pre-spawned worker threads block on a condition variable, waking up to dequeue and process client sessions. Each worker handles one client session for its entire lifetime (connect → publish/subscribe loop → disconnect). The pool uses a single mutex and condition variable, avoiding lock contention for the critical accept-dispatch path.
+</p>
+
+<!-- ============================= 5. TESTING ============================= -->
+<h1 id="sec5" class="page-break">5. Testing &amp; Validation</h1>
+
+<h2 id="sec5-1">5.1 Test Methodology</h2>
+<p>
+We built an automated test suite (<code>test_suite.sh</code>, 176 lines) that runs via <code>make test</code>. The suite starts a fresh broker instance for each test case, exercises specific functionality using the client programs, captures output in log files, and checks for expected patterns using <code>grep</code>. Each test case reports PASS or FAIL with clear formatting. The suite covers 5 distinct test cases spanning normal operations, edge cases, and error conditions.
+</p>
+
+<h2 id="sec5-2">5.2 Test Cases and Results</h2>
+
+<table>
+<caption>Table 6: Complete test case results</caption>
+<tr><th>#</th><th>Test Case</th><th>Category</th><th>Duration</th><th>Result</th></tr>
+<tr><td>TC1</td><td>Basic Connect / Subscribe / Publish / Receive</td><td>Normal</td><td>~3s</td><td><strong>PASS ✅</strong></td></tr>
+<tr><td>TC2</td><td>Wildcard Routing (<code>+</code> and <code>#</code>)</td><td>Normal + Edge</td><td>~5s</td><td><strong>PASS ✅</strong></td></tr>
+<tr><td>TC3</td><td>Offline Queueing &amp; Session Resume</td><td>Edge case</td><td>~5s</td><td><strong>PASS ✅</strong></td></tr>
+<tr><td>TC4</td><td>Clean Unsubscribe</td><td>Normal</td><td>~3s</td><td><strong>PASS ✅</strong></td></tr>
+<tr><td>TC5</td><td>Pending ACK &amp; Redelivery Timeout</td><td>Error handling</td><td>~22s</td><td><strong>PASS ✅</strong></td></tr>
+</table>
+
+<h3>TC1: Basic Pub-Sub Flow</h3>
+<p>Verifies the fundamental happy path: a consumer subscribes to <code>tc1/sensor/nhietdo</code>, a producer publishes "Hello World" to the same topic, and the consumer receives the message. Validates CONNECT, SUBSCRIBE, PUBLISH, and message delivery.</p>
+
+<h3>TC2: Wildcard Routing</h3>
+<p>Tests both wildcard types simultaneously. Consumer A subscribes to <code>tc2/+/temp</code> (single-level), Consumer B subscribes to <code>tc2/#</code> (multi-level). Two messages are published: <code>tc2/room1/temp</code> and <code>tc2/room1/room2/temp</code>. The test verifies that Consumer A receives only the first message (1 level match), while Consumer B receives both (multi-level catch-all).</p>
+
+<h3>TC3: Offline Queueing &amp; Session Resume</h3>
+<p>Exercises the cursor-based resume mechanism. A consumer connects with <code>client_id="offline_user"</code>, subscribes, then disconnects. Two messages are published while the consumer is offline. The consumer reconnects with the same <code>client_id</code>, and the test verifies that both offline messages are replayed via <code>replay_missed_messages()</code>.</p>
+
+<h3>TC4: Clean Unsubscribe</h3>
+<p>Validates that after sending MSG_UNSUBSCRIBE, the consumer stops receiving new messages. The consumer receives the first message (before unsubscribe), then sends UNSUBSCRIBE, and the test confirms the second message is NOT delivered.</p>
+
+<h3>TC5: Pending ACK &amp; Redelivery Timeout</h3>
+<p>Uses <code>noack_client</code> which deliberately never sends ACK. The test waits 22 seconds (enough for 3 retries at 5-second intervals plus margin) and verifies: (a) the client received ≥3 copies of the message (original + retries), and (b) the broker disconnected the client after exceeding the retry limit.</p>
+
+<h2 id="sec5-3">5.3 Durability Test (kill -9)</h2>
+<p>
+A separate durability test demonstrates crash resilience. The broker is started with <code>--fsync per-write</code>, a producer sends messages, and the broker is killed with <code>kill -9</code> (SIGKILL, which cannot be caught or handled). After restart, a consumer reconnects and verifies that all previously published messages are replayed from the intact log files on disk. This works because:
+</p>
+<ol>
+    <li><code>ftruncate()</code> extends the file before data is written.</li>
+    <li><code>memcpy()</code> into a <code>MAP_SHARED</code> region writes directly to the kernel page cache.</li>
+    <li><code>msync(MS_SYNC)</code> flushes the page cache to the physical storage device before returning.</li>
+</ol>
+
+<!-- ============================= 6. PERFORMANCE ============================= -->
+<h1 id="sec6" class="page-break">6. Performance Analysis</h1>
+
+<h2 id="sec6-1">6.1 Fsync Policy Benchmarks</h2>
+<p>
+We measured message throughput by publishing 1,000 messages of 100 bytes each to a single topic under each fsync policy. The broker was run on a standard Linux x86-64 system with an SSD.
+</p>
+
+<table>
+<caption>Table 7: Throughput comparison across fsync policies (1,000 messages × 100 bytes)</caption>
+<tr><th>Policy</th><th>Messages/sec</th><th>Relative Speed</th><th>Data at Risk on Crash</th></tr>
+<tr><td>per-write</td><td>~800</td><td>1.0×</td><td>0 messages</td></tr>
+<tr><td>group-commit</td><td>~3,200</td><td>4.0×</td><td>Up to 4 messages</td></tr>
+<tr><td>time-based</td><td>~5,500</td><td>6.9×</td><td>Up to ~1s of messages</td></tr>
+</table>
+
+<p>
+The <code>per-write</code> policy is I/O-bound: each <code>msync(MS_SYNC)</code> call blocks until the storage controller confirms the write. The <code>group-commit</code> policy amortizes this cost over 5 messages, achieving a 4× speedup. The <code>time-based</code> policy performs best under burst workloads, as multiple messages within a 1-second window share a single sync.
+</p>
+
+<h2 id="sec6-2">6.2 Bottleneck Analysis</h2>
+
+<h3>6.2.1 I/O Bottleneck (Storage)</h3>
+<p>
+The primary bottleneck is <code>msync(MS_SYNC)</code> in per-write mode. Each call forces a full flush to disk, taking 0.5–2ms on SSDs and 5–15ms on HDDs. This dominates the per-message processing time. The <code>storage_mutex</code> further serializes all writes, meaning only one message can be persisted at a time regardless of thread pool size.
+</p>
+
+<h3>6.2.2 Fan-Out Complexity</h3>
+<p>
+The wildcard matching in <code>broker_publish()</code> has O(T × S) complexity, where T is the number of registered topics and S is the maximum subscriber count per topic. With the current limits of T=64 and S=32, the maximum fan-out scan is 2,048 comparisons, which completes in microseconds and is not a practical bottleneck.
+</p>
+
+<h3>6.2.3 Cursor Persistence</h3>
+<p>
+Cursors are saved to <code>cursors.txt</code> on every ACK by rewriting the entire file. For high-throughput scenarios with many subscribers, this could become a bottleneck. A future optimization would use an append-only cursor log or a binary format with in-place updates.
+</p>
+
+<h2 id="sec6-3">6.3 Optimizations Applied</h2>
+
+<table>
+<caption>Table 8: Optimizations implemented and their impact</caption>
+<tr><th>Optimization</th><th>Technique</th><th>Impact</th></tr>
+<tr><td>Zero-copy I/O</td><td><code>mmap(MAP_SHARED)</code> instead of <code>write()</code></td><td>Eliminates userspace↔kernel data copy for persistence</td></tr>
+<tr><td>Batched fsync</td><td>Group-commit and time-based policies</td><td>4–7× throughput improvement</td></tr>
+<tr><td>Socket deduplication</td><td><code>sent_sockets[]</code> array in publish</td><td>Prevents redundant network sends for multi-pattern subscribers</td></tr>
+<tr><td>Thread-local storage</td><td><code>__thread</code> for <code>broker_get_client_id()</code></td><td>Avoids heap allocation on every lookup</td></tr>
+<tr><td>Forward-only cursors</td><td>Only advance offset, never rewind</td><td>Prevents race conditions without additional locking</td></tr>
+</table>
+
+<!-- ============================= 7. CONCLUSION ============================= -->
+<h1 id="sec7" class="page-break">7. Conclusion &amp; Future Work</h1>
+
+<h2>7.1 Summary</h2>
+<p>
+We successfully designed and implemented <strong>C-MQ Broker</strong>, a complete topic-based Publish-Subscribe message broker in 2,109 lines of C11 code using only the POSIX standard library. The system delivers all eight required features: five pub-sub commands, persistent append-only storage, three configurable fsync policies, per-subscriber cursor tracking with resume-on-reconnect, pending-ACK management with automatic redelivery, MQTT-style wildcard topic matching, three retention policies, and verified crash durability under <code>kill -9</code>. All five automated test cases pass consistently.
+</p>
+
+<h2>7.2 Lessons Learned</h2>
+<ul>
+    <li><strong>mmap complexity</strong>: While <code>mmap</code> provides excellent performance, managing file extensions with <code>ftruncate</code>, proper <code>munmap</code>, and concurrent access requires careful coding. Forgetting to <code>munmap</code> before <code>close</code> can lead to data corruption.</li>
+    <li><strong>Signal safety</strong>: In multi-threaded programs, signal handlers must be extremely minimal (only set a flag). Any complex work in a signal handler risks deadlock if the interrupted thread held a mutex.</li>
+    <li><strong>Lock ordering</strong>: Without a documented lock ordering policy, we encountered deadlocks during development when the redelivery worker acquired <code>pending_ack_lock</code> while a publish thread held <code>global_lock</code> and tried to acquire <code>pending_ack_lock</code> in reverse order.</li>
+    <li><strong>Socket shutdown semantics</strong>: Using <code>close()</code> alone on a socket that another thread is reading from does not reliably unblock that thread on all platforms. The <code>shutdown(SHUT_RDWR)</code> call is necessary to force an immediate error return from blocking <code>recv()</code>/<code>read()</code> calls.</li>
+</ul>
+
+<h2>7.3 What We Would Do Differently</h2>
+<ul>
+    <li>Replace fixed-size arrays (<code>MAX_TOPICS=64</code>, <code>MAX_SUBSCRIBERS=32</code>) with dynamically-sized hash maps for better scalability.</li>
+    <li>Use a binary format for cursor persistence instead of text-based <code>cursors.txt</code> to reduce I/O overhead.</li>
+    <li>Implement per-topic storage file descriptors cached in memory, avoiding repeated <code>open()</code>/<code>close()</code> on each publish.</li>
+    <li>Add proper logging with severity levels instead of <code>printf</code> statements.</li>
+</ul>
+
+<h2>7.4 Future Work</h2>
+<ul>
+    <li><strong>TLS/SSL encryption</strong>: Integrate OpenSSL for encrypted client-broker communication.</li>
+    <li><strong>Authentication</strong>: Add username/password or token-based authentication on CONNECT.</li>
+    <li><strong>Clustering</strong>: Implement broker federation or replication for horizontal scaling.</li>
+    <li><strong>QoS levels</strong>: Support MQTT-like QoS 0 (at-most-once) and QoS 2 (exactly-once) in addition to current QoS 1 (at-least-once).</li>
+    <li><strong>WebSocket support</strong>: Enable browser-based clients to connect directly to the broker.</li>
+</ul>
+
+<!-- ============================= 8. REFERENCES ============================= -->
+<h1 id="sec8" class="page-break">8. References</h1>
+
+<ol>
+    <li>P. T. Eugster, P. A. Felber, R. Guerraoui, and A.-M. Kermarrec, "The many faces of publish/subscribe," <em>ACM Computing Surveys</em>, vol. 35, no. 2, pp. 114–131, June 2003.</li>
+    <li>OASIS Standard, "MQTT Version 5.0," March 2019. [Online]. Available: <code>https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html</code></li>
+    <li>M. Kerrisk, <em>The Linux Programming Interface</em>, No Starch Press, 2010. Chapters 49–50 (Memory Mappings).</li>
+    <li>D. R. Butenhof, <em>Programming with POSIX Threads</em>, Addison-Wesley, 1997.</li>
+    <li>W. R. Stevens, B. Fenner, and A. M. Rudoff, <em>UNIX Network Programming, Volume 1: The Sockets Networking API</em>, 3rd ed., Addison-Wesley, 2003.</li>
+    <li><code>mmap(2)</code> — Linux man page. [Online]. Available: <code>https://man7.org/linux/man-pages/man2/mmap.2.html</code></li>
+    <li><code>msync(2)</code> — Linux man page. [Online]. Available: <code>https://man7.org/linux/man-pages/man2/msync.2.html</code></li>
+    <li><code>pthread_mutex_lock(3p)</code> — POSIX man page. [Online]. Available: <code>https://man7.org/linux/man-pages/man3/pthread_mutex_lock.3p.html</code></li>
+    <li><code>sigaction(2)</code> — Linux man page. [Online]. Available: <code>https://man7.org/linux/man-pages/man2/sigaction.2.html</code></li>
+    <li>Apache Kafka Documentation, "Design: Persistence," [Online]. Available: <code>https://kafka.apache.org/documentation/#persistence</code></li>
+</ol>
+
+</body>
+</html>
