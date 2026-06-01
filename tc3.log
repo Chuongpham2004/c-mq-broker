@@ -1,0 +1,16 @@
+[Consumer] Kết nối thành công. Client ID: 'tc3_consumer', Topic: 'tc3/topic'
+[Consumer] Đã gửi yêu cầu SUBSCRIBE topic [tc3/topic]. Đang chờ nhận tin nhắn...
+
+
+[Consumer] Bắt đầu tắt máy an toàn...
+[Consumer] Đã gửi yêu cầu UNSUBSCRIBE cho topic [tc3/topic]
+[Consumer] Kết nối thành công. Client ID: 'tc3_consumer', Topic: 'tc3/topic'
+[Consumer] Đã gửi yêu cầu SUBSCRIBE topic [tc3/topic]. Đang chờ nhận tin nhắn...
+
+[NHẬN TIN] ID: 5 | Topic: tc3/topic -> Nội dung: Tin nhan offline 1
+  -> Đã gửi ACK cho tin nhắn ID 5
+[NHẬN TIN] ID: 6 | Topic: tc3/topic -> Nội dung: Tin nhan offline 2
+  -> Đã gửi ACK cho tin nhắn ID 6
+
+[Consumer] Bắt đầu tắt máy an toàn...
+[Consumer] Đã gửi yêu cầu UNSUBSCRIBE cho topic [tc3/topic]

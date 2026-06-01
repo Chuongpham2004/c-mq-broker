@@ -1,0 +1,104 @@
+[Storage] Đã tạo thư mục lưu trữ: ./data
+Broker started. Listening on port 8080...
+Hệ thống Message Broker đã sẵn sàng điều phối...
+Chính sách Fsync: per-write
+Nhấn Ctrl + C để tắt server an toàn.
+
+[Worker 125545683605184] Đang xử lý client socket 4...
+[Broker] Khởi tạo phiên kết nối: socket 4 -> client_id 'tc1_consumer'
+[Broker] Đã khởi tạo Topic mới: sensor/temp
+[Broker] Subscriber socket 4 đã đăng ký topic [sensor/temp] thành công
+[Worker 125545675212480] Đang xử lý client socket 5...
+[Storage] Đã lưu thành công bản tin (36 bytes) vào ./data/sensor_temp.log
+[Broker] Đã đẩy tin nhắn ID 1 (topic: sensor/temp) tới socket mạng 4
+[Worker 125545675212480] Client 5 ngắt kết nối.
+[Broker] Nhận ACK cho tin nhắn 1 từ client 'tc1_consumer' (topic: sensor/temp, offset: 36)
+[Broker] Subscriber tại socket 4 hủy đăng ký thành công topic [sensor/temp]
+[Worker 125545683605184] Client 4 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 4 (client_id 'tc1_consumer')
+[Worker 125545666819776] Đang xử lý client socket 6...
+[Broker] Khởi tạo phiên kết nối: socket 6 -> client_id 'tc2_plus'
+[Broker] Đã khởi tạo Topic mới: tc2/+/temp
+[Broker] Subscriber socket 6 đã đăng ký topic [tc2/+/temp] thành công
+[Worker 125545658427072] Đang xử lý client socket 4...
+[Broker] Khởi tạo phiên kết nối: socket 4 -> client_id 'tc2_hash'
+[Broker] Đã khởi tạo Topic mới: tc2/#
+[Broker] Subscriber socket 4 đã đăng ký topic [tc2/#] thành công
+[Worker 125545675212480] Đang xử lý client socket 8...
+[Worker 125545683605184] Đang xử lý client socket 5...
+[Storage] Đã lưu thành công bản tin (44 bytes) vào ./data/tc2_room1_temp.log
+[Broker] Đã đẩy tin nhắn ID 2 (topic: tc2/room1/temp) tới socket mạng 6
+[Broker] Đã đẩy tin nhắn ID 3 (topic: tc2/room1/temp) tới socket mạng 4
+[Worker 125545675212480] Client 8 ngắt kết nối.
+[Broker] Nhận ACK cho tin nhắn 3 từ client 'tc2_hash' (topic: tc2/room1/temp, offset: 44)
+[Storage] Đã lưu thành công bản tin (50 bytes) vào ./data/tc2_room1_room2_temp.log
+[Broker] Nhận ACK cho tin nhắn 2 từ client 'tc2_plus' (topic: tc2/room1/temp, offset: 44)
+[Broker] Đã đẩy tin nhắn ID 4 (topic: tc2/room1/room2/temp) tới socket mạng 4
+[Worker 125545683605184] Client 5 ngắt kết nối.
+[Broker] Nhận ACK cho tin nhắn 4 từ client 'tc2_hash' (topic: tc2/room1/room2/temp, offset: 50)
+[Broker] Subscriber tại socket 6 hủy đăng ký thành công topic [tc2/+/temp]
+[Worker 125545666819776] Client 6 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 6 (client_id 'tc2_plus')
+[Broker] Subscriber tại socket 4 hủy đăng ký thành công topic [tc2/#]
+[Worker 125545658427072] Client 4 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 4 (client_id 'tc2_hash')
+[Worker 125545675212480] Đang xử lý client socket 10...
+[Broker] Khởi tạo phiên kết nối: socket 10 -> client_id 'tc3_consumer'
+[Broker] Đã khởi tạo Topic mới: tc3/topic
+[Broker] Subscriber socket 10 đã đăng ký topic [tc3/topic] thành công
+[Broker] Subscriber tại socket 10 hủy đăng ký thành công topic [tc3/topic]
+[Worker 125545675212480] Client 10 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 10 (client_id 'tc3_consumer')
+[Worker 125545683605184] Đang xử lý client socket 4...
+[Worker 125545666819776] Đang xử lý client socket 5...
+[Storage] Đã lưu thành công bản tin (41 bytes) vào ./data/tc3_topic.log
+[Worker 125545683605184] Client 4 ngắt kết nối.
+[Storage] Đã lưu thành công bản tin (41 bytes) vào ./data/tc3_topic.log
+[Worker 125545666819776] Client 5 ngắt kết nối.
+[Worker 125545658427072] Đang xử lý client socket 8...
+[Broker] Khởi tạo phiên kết nối: socket 8 -> client_id 'tc3_consumer'
+[Broker] Subscriber socket 8 đã đăng ký topic [tc3/topic] thành công
+[Broker] Replay tin nhắn ID 5 (topic: tc3/topic) từ file log ở offset 0 tới client 'tc3_consumer'
+[Broker] Replay tin nhắn ID 6 (topic: tc3/topic) từ file log ở offset 41 tới client 'tc3_consumer'
+[Broker] Nhận ACK cho tin nhắn 5 từ client 'tc3_consumer' (topic: tc3/topic, offset: 41)
+[Broker] Nhận ACK cho tin nhắn 6 từ client 'tc3_consumer' (topic: tc3/topic, offset: 82)
+[Broker] Subscriber tại socket 8 hủy đăng ký thành công topic [tc3/topic]
+[Worker 125545658427072] Client 8 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 8 (client_id 'tc3_consumer')
+[Worker 125545675212480] Đang xử lý client socket 4...
+[Broker] Khởi tạo phiên kết nối: socket 4 -> client_id 'tc4_consumer'
+[Broker] Đã khởi tạo Topic mới: tc4/topic
+[Broker] Subscriber socket 4 đã đăng ký topic [tc4/topic] thành công
+[Worker 125545683605184] Đang xử lý client socket 5...
+[Storage] Đã lưu thành công bản tin (47 bytes) vào ./data/tc4_topic.log
+[Broker] Đã đẩy tin nhắn ID 7 (topic: tc4/topic) tới socket mạng 4
+[Worker 125545683605184] Client 5 ngắt kết nối.
+[Broker] Nhận ACK cho tin nhắn 7 từ client 'tc4_consumer' (topic: tc4/topic, offset: 47)
+[Broker] Subscriber tại socket 4 hủy đăng ký thành công topic [tc4/topic]
+[Worker 125545675212480] Client 4 ngắt kết nối.
+[Broker] Đã xóa phiên kết nối: socket 4 (client_id 'tc4_consumer')
+[Worker 125545666819776] Đang xử lý client socket 6...
+[Storage] Đã lưu thành công bản tin (45 bytes) vào ./data/tc4_topic.log
+[Worker 125545666819776] Client 6 ngắt kết nối.
+[Worker 125545658427072] Đang xử lý client socket 4...
+[Broker] Khởi tạo phiên kết nối: socket 4 -> client_id 'noack_consumer'
+[Broker] Đã khởi tạo Topic mới: sensor/noack
+[Broker] Subscriber socket 4 đã đăng ký topic [sensor/noack] thành công
+[Worker 125545683605184] Đang xử lý client socket 5...
+[Storage] Đã lưu thành công bản tin (44 bytes) vào ./data/sensor_noack.log
+[Broker] Đã đẩy tin nhắn ID 8 (topic: sensor/noack) tới socket mạng 4
+[Worker 125545683605184] Client 5 ngắt kết nối.
+[Broker] Gửi lại tin nhắn ID 8 (lần 1) tới socket 4...
+[Broker] Gửi lại tin nhắn ID 8 (lần 2) tới socket 4...
+[Broker] Gửi lại tin nhắn ID 8 (lần 3) tới socket 4...
+[Broker] Client 'noack_consumer' (socket 4) không ACK tin nhắn 8 sau 3 lần gửi lại. Đang ngắt kết nối...
+[Worker 125545658427072] Client 4 ngắt kết nối.
+[Broker] Đã gỡ subscriber socket 4 khỏi topic [sensor/noack]
+[Broker] Đã xóa phiên kết nối: socket 4 (client_id 'noack_consumer')
+
+
+[System] Nhận tín hiệu ngắt (Signal 2). Bắt đầu quá trình Graceful Shutdown...
+
+Đang dọn dẹp tài nguyên mạng...
+Đã đóng Server Socket.
+Graceful Shutdown hoàn tất. Tạm biệt!

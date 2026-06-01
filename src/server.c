@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -40,20 +41,53 @@ void handle_client(void *arg) {
             break;
         }
 
-        if (msg->header.type == MSG_PUBLISH) {
+        if (msg->header.type == MSG_CONNECT) {
+            if (msg->payload) {
+                broker_register_session(client_socket, (char *)msg->payload);
+            }
+        } else if (msg->header.type == MSG_PUBLISH) {
             broker_publish(msg);
         } else if (msg->header.type == MSG_SUBSCRIBE) {
             broker_subscribe(client_socket, msg->topic);
+        } else if (msg->header.type == MSG_UNSUBSCRIBE) {
+            broker_unsubscribe(client_socket, msg->topic);
+        } else if (msg->header.type == MSG_ACK) {
+            broker_handle_ack(client_socket, msg->header.msg_id);
         }
 
         free_message(msg);
     }
+    // Gỡ client khỏi các topics khi ngắt kết nối
+    broker_remove_client(client_socket);
     close(client_socket);
 }
 
-int main() {
+int main(int argc, char **argv) {
     init_broker(); 
     
+    // Phân tích các tham số dòng lệnh cấu hình fsync & retention
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--fsync") == 0 && i + 1 < argc) {
+            char *policy = argv[++i];
+            if (strcmp(policy, "per-write") == 0) {
+                global_fsync_policy = FSYNC_PER_WRITE;
+            } else if (strcmp(policy, "group-commit") == 0) {
+                global_fsync_policy = FSYNC_GROUP_COMMIT;
+            } else if (strcmp(policy, "time-based") == 0) {
+                global_fsync_policy = FSYNC_TIME_BASED;
+            }
+        } else if (strcmp(argv[i], "--retention-time") == 0 && i + 1 < argc) {
+            global_retention_time = atoi(argv[++i]);
+        } else if (strcmp(argv[i], "--retention-size") == 0 && i + 1 < argc) {
+            global_retention_size = strtoul(argv[++i], NULL, 10);
+        } else if (strcmp(argv[i], "--retention-acked") == 0) {
+            global_retention_acked = 1;
+        }
+    }
+    
+    // Khởi động các luồng phụ trách gửi lại và dọn dẹp tin nhắn
+    init_broker_threads();
+
     // Đăng ký bắt tín hiệu hệ thống (SIGINT = Ctrl+C, SIGTERM = lệnh kill)
     struct sigaction sa;
     sa.sa_handler = handle_signal;
@@ -65,6 +99,12 @@ int main() {
     int server_socket = create_server_socket(PORT);
     threadpool_t *pool = threadpool_create(THREAD_COUNT, QUEUE_SIZE);
     printf("Hệ thống Message Broker đã sẵn sàng điều phối...\n");
+    printf("Chính sách Fsync: %s\n", 
+           global_fsync_policy == FSYNC_PER_WRITE ? "per-write" :
+           global_fsync_policy == FSYNC_GROUP_COMMIT ? "group-commit" : "time-based");
+    if (global_retention_time > 0) printf("Chính sách Retention Time: %d giây\n", global_retention_time);
+    if (global_retention_size > 0) printf("Chính sách Retention Size: %zu bytes\n", global_retention_size);
+    if (global_retention_acked) printf("Chính sách Retention Acked: Enabled\n");
     printf("Nhấn Ctrl + C để tắt server an toàn.\n\n");
 
     // Vòng lặp bây giờ phụ thuộc vào cờ keep_running thay vì while(1)

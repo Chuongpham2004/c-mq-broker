@@ -5,9 +5,11 @@
 #include <arpa/inet.h>
 #include "../include/protocol.h"
 
+#include <time.h>
+
 #define PORT 8080
 
-int main() {
+int main(int argc, char **argv) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serv_addr;
     serv_addr.sin_family = AF_INET;
@@ -19,13 +21,15 @@ int main() {
         return -1;
     }
 
-    // Chuẩn bị dữ liệu
-    char *topic = "sensor/nhietdo";
-    char *payload = "32.5 do C";
+    // Chuẩn bị dữ liệu (nhận từ tham số hoặc mặc định)
+    char *topic = (argc > 1) ? argv[1] : "sensor/nhietdo";
+    char *payload = (argc > 2) ? argv[2] : "32.5 do C";
 
     MessageHeader header;
     header.type = MSG_PUBLISH;
     header.topic_len = strlen(topic);
+    header.msg_id = htonl(0); // Producer gửi không cần msg_id cụ thể
+    header.timestamp = htonl(time(NULL));
     header.payload_len = htonl(strlen(payload)); // Chuyển sang Network Byte Order
 
     // Gửi lần lượt Header -> Topic -> Payload
@@ -33,7 +37,7 @@ int main() {
     send(sock, topic, header.topic_len, 0);
     send(sock, payload, strlen(payload), 0);
 
-    printf("Đã gửi message thành công!\n");
+    printf("Đã gửi message thành công tới topic '%s' với payload '%s'!\n", topic, payload);
     close(sock);
     return 0;
 }

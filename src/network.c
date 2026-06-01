@@ -57,7 +57,7 @@ ssize_t read_exact(int fd, void *buf, size_t n) {
     char *ptr = buf;
     while (nleft > 0) {
         if ((nread = read(fd, ptr, nleft)) < 0) {
-            if (errno == EINTR) nread = 0; // Bị ngắt, đọc tiếp
+            if (errno == EINTR) return -1; // Bị ngắt bởi tín hiệu (Graceful shutdown)
             else return -1; // Lỗi thật sự
         } else if (nread == 0) break; // EOF (Client ngắt kết nối)
         nleft -= nread;
@@ -72,13 +72,15 @@ Message* receive_message(int client_socket) {
     if (!msg) return NULL;
     memset(msg, 0, sizeof(Message));
 
-    // 1. Đọc đúng 6 bytes Header
+    // 1. Đọc đúng Header (14 bytes)
     if (read_exact(client_socket, &msg->header, sizeof(MessageHeader)) != sizeof(MessageHeader)) {
         free(msg);
         return NULL; 
     }
 
     // Đảo ngược byte order từ Network (Big Endian) sang Host (Little Endian)
+    msg->header.msg_id = ntohl(msg->header.msg_id);
+    msg->header.timestamp = ntohl(msg->header.timestamp);
     msg->header.payload_len = ntohl(msg->header.payload_len);
 
     // 2. Đọc Topic (nếu có)

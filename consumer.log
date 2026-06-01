@@ -1,0 +1,6 @@
+[Consumer] Kết nối thành công. Client ID: 'consumer_1', Topic: 'sensor/nhietdo'
+[Consumer] Đã gửi yêu cầu SUBSCRIBE topic [sensor/nhietdo]. Đang chờ nhận tin nhắn...
+
+
+[Consumer] Bắt đầu tắt máy an toàn...
+[Consumer] Đã gửi yêu cầu UNSUBSCRIBE cho topic [sensor/nhietdo]

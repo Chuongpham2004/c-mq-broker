@@ -1,0 +1,8 @@
+[Consumer] Kết nối thành công. Client ID: 'tc4_consumer', Topic: 'tc4/topic'
+[Consumer] Đã gửi yêu cầu SUBSCRIBE topic [tc4/topic]. Đang chờ nhận tin nhắn...
+
+[NHẬN TIN] ID: 7 | Topic: tc4/topic -> Nội dung: Tin nhan truoc khi unsub
+  -> Đã gửi ACK cho tin nhắn ID 7
+
+[Consumer] Bắt đầu tắt máy an toàn...
+[Consumer] Đã gửi yêu cầu UNSUBSCRIBE cho topic [tc4/topic]

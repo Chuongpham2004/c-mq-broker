@@ -1,0 +1,10 @@
+[Consumer] Kết nối thành công. Client ID: 'consumer_hash', Topic: 'sensor/#'
+[Consumer] Đã gửi yêu cầu SUBSCRIBE topic [sensor/#]. Đang chờ nhận tin nhắn...
+
+[NHẬN TIN] ID: 2 | Topic: sensor/room1/temp -> Nội dung: Nhiet do room1 la 25
+  -> Đã gửi ACK cho tin nhắn ID 2
+[NHẬN TIN] ID: 3 | Topic: sensor/room1/room2/temp -> Nội dung: Nhiet do room2 la 30
+  -> Đã gửi ACK cho tin nhắn ID 3
+
+[Consumer] Bắt đầu tắt máy an toàn...
+[Consumer] Đã gửi yêu cầu UNSUBSCRIBE cho topic [sensor/#]
