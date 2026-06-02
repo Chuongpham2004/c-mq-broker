@@ -9,11 +9,11 @@ static void *threadpool_worker(void *threadpool) {
 
     while (1) {
         // 1. Khóa Mutex lại trước khi đụng vào Queue
-        pthread_mutex_lock(&(pool->lock));
+        pthread_mutex_lock(&(pool->lock));//Lock truoc khi doc queue
 
         // 2. Nếu Queue trống, thread sẽ đi ngủ (wait) để nhường CPU
         while (pool->count == 0) {
-            pthread_cond_wait(&(pool->notify), &(pool->lock));
+            pthread_cond_wait(&(pool->notify), &(pool->lock)); //ngu, nhuong cpu
         }
 
         // 3. Lấy 1 task (client connection) ra khỏi Queue
